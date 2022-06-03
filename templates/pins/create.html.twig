@@ -1,19 +1,22 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+<body>
 
 <h5>Create Pin</h5>
 
-<form method="POST" action="">
-	
-	<div>
-		<label for="title">Titre</label> <br>
-		<input type="text" required name="title" id="title" class="form-control" placeholder="Titre">
-	</div>
 
-	<div>
-		<label for="description">Description</label> <br>
-		<textarea name="description" required id="description" rows="5" cols="80"></textarea>
-	</div>
-	<div>
-		<button type="submit" class="btn"> Save Pin </button>
-	</div>
-</form>
+{{ form_start(form) }}
+
+{{ form_widget(form) }}
+
+<input type="submit" name="" value="Create Pin" class="btn">
+
+{{ form_end(form) }}
+
+</body>
+</html>

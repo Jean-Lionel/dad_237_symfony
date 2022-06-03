@@ -7,7 +7,8 @@
 </head>
 <body>
     
-    <h1>index Pin</h1>
+    <h1>All Pins</h1>
+    <a href="{{ path("app_pins_create") }}">Create A Pin</a>
 
     {% for pin in pins %}
         <article>
@@ -16,6 +17,9 @@
                {{ pin.description }}
            </p>
         </article>
+
+        {% else %}
+            <p>No Pin yet </p>
         
     {% endfor %}
 </body>

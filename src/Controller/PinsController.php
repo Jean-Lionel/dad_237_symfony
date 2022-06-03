@@ -8,23 +8,22 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class PinsController extends AbstractController
 {
     
     /**
-     * @Route("/", name="app_pins")
+     * @Route("/", name="app_home")
      */
-    public function index(EntityManagerInterface $em): Response
+    public function index(PinRepository $repo): Response
     {
-        $repo = $em->getRepository(Pin::class);
-
-        $pins = $repo->findAll();
-
+       
         return $this->render('pins/index.html.twig', [
-            'name' => 'Jean Lionel Le hacker',
-            'pins' => $pins,
+            'pins' => $repo->findAll(),
         ]);
     }
 
@@ -32,22 +31,31 @@ class PinsController extends AbstractController
      * @Route("/pins/create", methods={"GET", "POST"})
      */
 
-    public function create(Request $request, EntityManagerInterface $em)
+    public function create(Request $request, PinRepository $repo): Response
     {
-        if ($request->isMethod('POST')) {
-            // code...
-           $data = $request->request->all();
+        $pin = new Pin();
+      $form = $this->createFormBuilder($pin)
+                    ->add('title', null)
+                    ->add('description', null,[
+                        "attr" => [
+                            "rows" => 5,
+                            "cols" => 15
+                        ]
+                    ])
+                    ->getForm()
+                ;
 
-           $pin = new Pin();
+      $form->handleRequest($request);
 
-           $pin->setTitle($data['title']);
-           $pin->setDescription($data['description']);
-           $repo = $em->getRepository(Pin::class);
-           $repo->add($pin, true);
+      if($form->isSubmitted() && $form->isValid()){
+        $repo->add($pin, true);
 
-           return $this->redirect('/');
+        return $this->redirectToRoute("app_home");
+      }
 
-        }
-        return $this->render('pins/create.html.twig');
+
+        return $this->render('pins/create.html.twig',[
+            'form' =>  $form->createView()
+        ]);
     }
 }
